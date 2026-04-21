@@ -1,0 +1,40 @@
+{
+  "name": "gemini-deepresearch-cli",
+  "version": "0.1.0",
+  "description": "CLI for Google Gemini Deep Research Agent — plan, run, stream, and follow up on research tasks from the terminal",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "dr": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "gemini",
+    "deep-research",
+    "google",
+    "ai",
+    "research",
+    "cli"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@google/genai": "^1.0.0",
+    "commander": "^13.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.8.0"
+  }
+}
