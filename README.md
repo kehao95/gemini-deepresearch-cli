@@ -1,5 +1,8 @@
 # dr — Gemini Deep Research CLI
 
+[![npm version](https://img.shields.io/npm/v/gemini-deepresearch-cli)](https://www.npmjs.com/package/gemini-deepresearch-cli)
+[![license](https://img.shields.io/npm/l/gemini-deepresearch-cli)](./LICENSE)
+
 A POSIX-friendly CLI for the [Google Gemini Deep Research Agent](https://ai.google.dev/gemini-api/docs/deep-research). Plan, run, stream, and follow up on multi-step research tasks from your terminal.
 
 ```
