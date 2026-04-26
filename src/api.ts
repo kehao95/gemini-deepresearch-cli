@@ -100,7 +100,9 @@ export async function pollUntilDone(id: string): Promise<Interaction> {
 
 // --------------- Streaming ---------------
 
-export interface StreamOpts extends CreateOpts {}
+export interface StreamOpts extends CreateOpts {
+  onInteractionStart?: (id: string) => void | Promise<void>;
+}
 
 export async function streamInteraction(opts: StreamOpts): Promise<string | undefined> {
   const client = getClient();
@@ -125,6 +127,7 @@ export async function streamInteraction(opts: StreamOpts): Promise<string | unde
         interactionId = chunk.interaction?.id;
         if (interactionId) {
           out.interactionId(interactionId);
+          await opts.onInteractionStart?.(interactionId);
         }
       }
       if ('event_id' in chunk && chunk.event_id) {
@@ -192,6 +195,18 @@ export async function streamInteraction(opts: StreamOpts): Promise<string | unde
 
 // --------------- Output helpers ---------------
 
+export function renderOutputs(outputs: Interaction['outputs']): string {
+  if (!outputs?.length) return '';
+
+  const chunks: string[] = [];
+  for (const output of outputs) {
+    if ('text' in output && output.type === 'text') {
+      chunks.push(output.text);
+    }
+  }
+  return chunks.join('');
+}
+
 export function printOutputs(outputs: Interaction['outputs']) {
   if (!outputs?.length) return;
   for (const output of outputs) {
@@ -207,25 +222,4 @@ export function printOutputs(outputs: Interaction['outputs']) {
 
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-// --------------- Stdin helper ---------------
-
-export async function readStdin(): Promise<string> {
-  const chunks: Buffer[] = [];
-  for await (const chunk of process.stdin) {
-    chunks.push(Buffer.from(chunk));
-  }
-  return Buffer.concat(chunks).toString('utf-8').trim();
-}
-
-export async function resolvePrompt(prompt?: string): Promise<string> {
-  if (prompt === '-' || (!prompt && !process.stdin.isTTY)) {
-    return readStdin();
-  }
-  if (!prompt) {
-    out.error('Prompt is required. Provide as argument or pipe via stdin.');
-    process.exit(2);
-  }
-  return prompt;
 }
